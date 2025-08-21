@@ -21,7 +21,6 @@ Clone and install:
 git clone https://github.com/adubay/Vid2Text.git
 cd Vid2Text
 python3 install.py
-pip install .
 source ~/.bashrc
 
 Clone and install Ubuntu:
@@ -32,7 +31,7 @@ git clone https://github.com/adubay/Vid2Text.git
 cd Vid2Text
 source .venv/bin/activate
 python3 install.py
-pip install .
+
 
 ## 📦 Run
 video-translator
