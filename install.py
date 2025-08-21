@@ -16,6 +16,7 @@ except ImportError:
 
 # Install system dependencies
 run("sudo apt install ffmpeg -y")
+run("pip install argos-translate-files")
 
 # Install Python deps
 run("python3 -m pip install --upgrade pip")
