@@ -17,7 +17,7 @@ A standalone CLI tool to **download, transcribe, and translate videos** using:
 Clone and install:
 
 ```bash
-git clone https://github.com/yourusername/video-translator.git
+git clone https://github.com/adubay/video-translator.git
 cd video-translator
 python3 install.py
 pip install .
