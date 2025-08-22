@@ -17,9 +17,13 @@ A standalone CLI tool to **download, transcribe, and translate videos** using:
 Clone and install:
 
 git clone https://github.com/Tatauman/Vid2Text.git
+
 cd Vid2Text
+
 python3 -m venv venv
+
 source venv/bin/activate
+
 python3 install.py
 
 
