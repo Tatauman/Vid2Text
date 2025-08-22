@@ -22,11 +22,24 @@ run("pip install argos-translate-files")
 run("python3 -m pip install --upgrade pip")
 run("python3 -m pip install -r requirements.txt")
 
+# Install translate files
+run("argospm install translate")
+
 # Install yt-dlp manually (latest binary)
 yt_dlp_path = os.path.expanduser("~/.local/bin/yt-dlp")
 os.makedirs(os.path.dirname(yt_dlp_path), exist_ok=True)
 run(f"wget https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -O {yt_dlp_path}")
 run(f"chmod a+rx {yt_dlp_path}")
+
+# Create Folders
+folders = ["downloads", "transcripts", "translations"]
+
+for folder in folders:
+    os.makedirs(folder, exist_ok=True)
+    print(f"📂 Created folder: {folder}")
+
+print("\n✅ All folders are ready.")
+
 
 print("\n✅ Installation complete!")
 
