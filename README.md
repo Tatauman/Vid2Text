@@ -23,10 +23,13 @@ source venv/bin/activate
 python3 install.py
 
 
-## 📦 Run
+## 📦 Run CLI
 source venv/bin/activate
 
 video-translator
 or
 python cli.py
 
+## 📦 Run GUI
+source venv/bin/activate
+python3 video_translator_gui.py
