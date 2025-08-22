@@ -6,31 +6,53 @@ import argostranslatefiles
 # Ensure PATH includes yt-dlp and whisper
 os.environ["PATH"] += os.pathsep + os.path.expanduser("~/.local/bin")
 
+
 def download_youtube():
     yturl = input("Enter YouTube URL: ")
     outname = input("Enter output filename: ")
     subprocess.run(["yt-dlp", "-o", outname, yturl], check=True)
+
 
 def download_video():
     url = input("Enter direct video URL: ")
     outname = input("Enter output filename: ")
     subprocess.run(["wget", "-O", outname, url], check=True)
 
+
 def transcribe():
-    filename = input("Enter video filename (with extension): ")
-    fmt = input("Output format (txt, vtt, srt, tsv, json, all): ")
-    subprocess.run(["whisper", filename, "-f", fmt], check=True)
+    # list current files for convenience
+    subprocess.call("ls", shell=True)
+
+    filename = input("Enter video filename (without extension): ")
+    ext = input("Enter file extension (e.g. mp4, webm): ")
+    fmt = input("Enter transcript output format (txt, vtt, srt, tsv, json, all): ")
+
+    infile = f"{filename}.{ext}"
+    subprocess.run(["whisper", infile, "-f", fmt], check=True)
+
 
 def translate():
-    installed_languages = argostranslate.translate.get_installed_languages()
-    
-    # Build a dict {code: name}
     installed_dict = {"Afar": "aa","Afrikaans": "af","Akan": "ak","Shqip": "sq","Amharic": "am","Arabic": "ar","Aragonese": "an","Armenian": "hy","Assamese": "as","Avar, Magyar": "av","Avesta": "ae","Aymara": "ay","Azerbaijani, Turkish": "az","Bambara": "bm","Bashkir": "ba","Basque": "eu","Belarusian": "be","Bangla": "bn","Bhojpuri, hindi": "bh","Bislama": "bi","Bosnian": "bs","Breton": "br","Bulgarian": "bg","Burmese": "my","Catalan, Valencian": "ca","Chamoru": "ch","Chechen": "ce","Chewa": "ny","Chinese Traditional": "zh","Chuvash": "cv","Cornish": "kw","Corsican": "co","Cree": "cr","Croatian": "hr","Czech": "cs","danish": "da","Divehi": "dv","Dutch, Flemish": "nl","Dzongkha": "dz","English": "en","Esperanto": "eo","Estonian": "et","Ewe": "ee","Faroese": "fo","Fijian": "fj","Finnish": "fi","French": "fr","Fula": "ff","Galician": "gl","Georgian": "ka","German": "de","Greek": "el","Guarani": "gn","Gujarati": "gu","Haitian Creole": "ht","Hausa": "ha","Hebrew": "he","Herero": "hz","Hindi": "hi","Hiri Motu": "ho","Hungarian": "hu","Interlingua": "ia","Indonesian": "id","Interlingue": "ie","Irish": "ga","Igbo": "ig","Iñupiaq": "ik","Ido": "io","Icelandic": "is","Italian": "it","Inuktitut": "iu","Japanese": "ja","Tagalog": "jv","Greenlandic": "kl","Kannada": "kn","Kanuri": "kr","Kashmiri": "ks","Kazakh": "kk","Khmer": "km","Kikuyu": "ki","Rwandan": "rw","Kyrgyz": "ky","Komi": "kv","Kongo": "kg","korean": "ko","Kurdish": "ku","Kwanyama": "kj","Latin": "la","Luxembourgish": "lb","Ganda": "lg","Limburgish": "li","Lingala": "ln","Lao": "lo","Lithuanian": "lt","Luba-Katanga": "lu","Latvian": "lv","Manx": "gv","Macedonian": "mk","Malagasy": "mg","Malay": "ms","Malayalam": "ml","Maltese": "mt","Māori": "mi","Marathi": "mr","Marshallese": "mh","Mongolian": "mn","Nauruan": "na","Navajo": "nv","North Ndebele": "nd","Nepali": "ne","Ovambo": "ng","Bokmål": "nb","Nynorsk": "nn","Norwegian": "no","Nuosu": "ii","Ndebele": "nr","Occitan": "oc","Ojibwe": "oj","Church Slavonic": "cu","Oromo": "om","Odia": "or","Ossetian": "os","Punjabi": "pa","Hindi": "pi","Farsi": "fa","Polish": "pl","Pashto": "ps","Portuguese": "pt","Quechuan": "qu","Romansh": "rm","Rundi": "rn","Romanian, Moldavian": "ro","Russian": "ru","Sanskrit": "sa","Sardinian": "sc","Sindhi": "sd","Northern Sami": "se","Samoan": "sm","Sango": "sg","Serbian": "sr","Gaelic": "gd","Shona": "sn","Sinhala": "si","Slovak": "sk","Slovenian": "sl","Somali": "so","Sesotho": "st","Spanish": "es","Sundanese": "su","Swahili": "sw","Swazi": "ss","Swedish": "sv","Tamil": "ta","Telugu": "te","Tajik": "tg","Thai": "th","Tigrinya": "ti","Tibetan": "bo","Turkmen": "tk","Tagalog": "tl","Tswana": "tn","Tongan": "to","Turkish": "tr","Tsonga": "ts","Tatar": "tt","Twi": "tw","Tahitian": "ty","Uyghur": "ug","Ukrainian": "uk","Urdu": "ur","Uzbek": "uz","Venda": "ve","Vietnamese": "vi","Volapük": "vo","Walloon": "wa","Welsh": "cy","Wolof": "wo","Frisian": "fy","Xhosa": "xh","Yiddish": "yi","Yoruba": "yo","Zhuang": "za","Zulu": "zu"}
-    print("Installed translation languages:", installed_dict)
+    lang_codes = [lang.code for lang in installed_languages]
 
-    from_code = input("Source language code: ")
-    to_code = input("Target language code: ")
-    infile = input("Path to transcript file: ")
+    print("Installed translation languages:", installed_dict)
+    # Validate input language codes
+    def get_lang_code(prompt):
+        while True:
+            code = input(prompt).strip().lower()
+            if code in lang_codes:
+                return code
+            else:
+                print("❌ Invalid code. Choose from:", lang_codes)
+
+    from_code = get_lang_code("Enter source language code: ")
+    to_code = get_lang_code("Enter target language code: ")
+
+    infile = input("Enter path to transcript file: ").strip()
+    while not os.path.isfile(infile):
+        print("❌ File does not exist.")
+        infile = input("Enter path to transcript file: ").strip()
+
     outfile = "translated_" + os.path.basename(infile)
 
     from_lang = next(lang for lang in installed_languages if lang.code == from_code)
@@ -42,8 +64,9 @@ def translate():
         os.path.abspath(infile),
         output_path=outfile
     )
-    
-    print(f"✅ Translated file saved as {outfile}")
+
+    print(f"✅ Translation saved as {outfile}")
+
 
 def main():
     if input("Download YouTube video? (y/n): ").lower() == "y":
@@ -54,6 +77,7 @@ def main():
         transcribe()
     if input("Translate transcript? (y/n): ").lower() == "y":
         translate()
+
 
 if __name__ == "__main__":
     main()
