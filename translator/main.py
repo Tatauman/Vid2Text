@@ -41,7 +41,7 @@ def transcribe():
 
     infile = f"{filename}.{ext}"
     infile_path = os.path.join(DOWNLOAD_DIR, infile)
-    subprocess.run(["whisper", infile_path, "--model", "tiny", "-f", fmt, "--output_dir", TRANSCRIPT_DIR], check=True)
+    subprocess.run(["whisper", infile_path, "--model", "small", "-f", fmt, "--output_dir", TRANSCRIPT_DIR], check=True)
     print(f"✅ Transcript saved to {TRANSCRIPT_DIR}")
 
 def translate():
